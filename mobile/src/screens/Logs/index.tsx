@@ -114,7 +114,7 @@ export default function LogsScreen() {
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Header */}
-      <View style={[styles.header, { backgroundColor: theme.surface, borderBottomColor: theme.border }]}>
+      <View style={[styles.header, { backgroundColor: theme.background }]}>
         <View style={{ flex: 1 }}>
           <Text style={[styles.title, { color: theme.text }]}>Registros do Sistema</Text>
           <View style={styles.statusRow}>
@@ -176,7 +176,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   header: {
     flexDirection: 'row', alignItems: 'center',
     paddingHorizontal: 20, paddingTop: 56, paddingBottom: 14,
-    borderBottomWidth: 1,
+
   },
   title: { fontSize: 19, fontWeight: '700' },
   statusRow: { flexDirection: 'row', alignItems: 'center', marginTop: 3, gap: 5 },

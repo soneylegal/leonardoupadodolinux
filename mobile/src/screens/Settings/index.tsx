@@ -106,7 +106,7 @@ export default function SettingsScreen() {
   return (
     <ScrollView style={[styles.container, { backgroundColor: theme.background }]} showsVerticalScrollIndicator={false}>
       {/* Header */}
-      <View style={[styles.header, { backgroundColor: theme.surface, borderBottomColor: theme.border }]}>
+      <View style={[styles.header, { backgroundColor: theme.background }]}>
         <View>
           <Text style={[styles.title, { color: theme.text }]}>Configurações</Text>
           <Text style={[styles.subtitle, { color: theme.textSecondary }]}>Conta, API e preferências</Text>
@@ -286,13 +286,13 @@ const createStyles = (theme: any) => StyleSheet.create({
   centered: { justifyContent: 'center', alignItems: 'center' },
   header: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-    paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, borderBottomWidth: 1,
+    paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16,
   },
   title: { fontSize: 19, fontWeight: '700' },
   subtitle: { fontSize: 12, marginTop: 3 },
   modeBadge: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 12 },
   modeDot: { width: 7, height: 7, borderRadius: 4 },
-  modeBadgeText: { fontSize: 12, fontWeight: '700' },
+  modeBadgeText: { fontSize: 12, fontWeight: '600' },
   body: { padding: 16, gap: 20, paddingBottom: 40 },
   sectionTitle: { fontSize: 11, fontWeight: '500', opacity: 0.65, marginBottom: 10 },
   balanceCard: { borderRadius: 12, padding: 16, borderWidth: 1, gap: 12 },
@@ -301,7 +301,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   balanceValue: { fontSize: 22, fontWeight: '600', marginTop: 2 },
   resetBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, borderWidth: 1, borderRadius: 10, paddingVertical: 9 },
   resetBtnText: { fontSize: 13, fontWeight: '600' },
-  statusCard: { borderRadius: 14, padding: 16, borderWidth: 1, gap: 12 },
+  statusCard: { borderRadius: 14, padding: 16, gap: 12 },
   statusRow: { gap: 8 },
   statusItem: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   statusDot: { width: 8, height: 8, borderRadius: 4 },
@@ -317,7 +317,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   inputContainer: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: 12, paddingHorizontal: 14 },
   input: { flex: 1, fontSize: 14, paddingVertical: 14 },
   eyeBtn: { padding: 4 },
-  toggleSection: { borderRadius: 14, padding: 16, borderWidth: 1, gap: 4 },
+  toggleSection: { borderRadius: 14, padding: 16, gap: 4 },
   toggleRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 12, borderBottomWidth: 0 },
   toggleLabel: { fontSize: 15, fontWeight: '500' },
   toggleDesc: { fontSize: 12, marginTop: 2 },

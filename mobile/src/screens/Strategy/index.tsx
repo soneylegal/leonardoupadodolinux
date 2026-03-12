@@ -101,7 +101,7 @@ export default function StrategyScreen() {
   return (
     <ScrollView style={[styles.container, { backgroundColor: theme.background }]} showsVerticalScrollIndicator={false}>
       {/* Header */}
-      <View style={[styles.header, { backgroundColor: theme.surface, borderBottomColor: theme.border }]}>
+      <View style={[styles.header, { backgroundColor: theme.background }]}>
         <View>
           <Text style={[styles.title, { color: theme.text }]}>Configurar Estratégia</Text>
           <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
@@ -285,7 +285,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   container: { flex: 1 },
   header: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-    paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, borderBottomWidth: 1,
+    paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16,
   },
   title: { fontSize: 19, fontWeight: '700' },
   subtitle: { fontSize: 12, marginTop: 3 },
@@ -298,7 +298,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
     padding: 14, borderRadius: 12, borderWidth: 1,
   },
-  assetSymbol: { fontSize: 17, fontWeight: '700' },
+  assetSymbol: { fontSize: 17, fontWeight: '600' },
   assetName: { fontSize: 12, marginTop: 2 },
   pickerDropdown: {
     borderRadius: 12, borderWidth: 1, overflow: 'hidden',
@@ -307,7 +307,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     flexDirection: 'row', alignItems: 'center', padding: 13,
     borderBottomWidth: 0.5, borderBottomColor: 'rgba(255,255,255,0.05)', gap: 10,
   },
-  pickerSymbol: { fontSize: 14, fontWeight: '700', width: 52 },
+  pickerSymbol: { fontSize: 14, fontWeight: '600', width: 52 },
   pickerName: { flex: 1, fontSize: 13 },
   tfRow: { flexDirection: 'row', gap: 8 },
   tfBtn: { flex: 1, alignItems: 'center', paddingVertical: 10, borderRadius: 10, borderWidth: 1 },
@@ -333,7 +333,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   ratioText: { fontSize: 13 },
   strategyCard: {
     flexDirection: 'row', alignItems: 'center',
-    padding: 14, borderRadius: 12, borderWidth: 1,
+    padding: 14, borderRadius: 12,
   },
   strategyName: { fontSize: 14, fontWeight: '600' },
   strategyDetail: { fontSize: 11, marginTop: 3 },
@@ -341,5 +341,5 @@ const createStyles = (theme: any) => StyleSheet.create({
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     padding: 16, borderRadius: 14, gap: 10, marginTop: 4,
   },
-  saveBtnText: { color: '#fff', fontSize: 16, fontWeight: '700' },
+  saveBtnText: { color: '#fff', fontSize: 15, fontWeight: '600' },
 });

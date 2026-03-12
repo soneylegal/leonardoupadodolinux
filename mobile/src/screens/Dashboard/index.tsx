@@ -153,13 +153,13 @@ export default function DashboardScreen() {
 
       {/* Saldo */}
       <View style={styles.balanceRow}>
-        <View style={[styles.balanceCard, { backgroundColor: theme.card, borderColor: theme.border }]}>
+        <View style={[styles.balanceCard, { backgroundColor: theme.card }]}>
           <Text style={[styles.balanceLabel, { color: theme.textSecondary }]}>SALDO SIMULADO</Text>
           <Text style={[styles.balanceValue, { color: theme.text }]}>
             {balance !== null ? formatCurrency(balance) : '—'}
           </Text>
         </View>
-        <View style={[styles.balanceCard, { backgroundColor: theme.card, borderColor: theme.border }]}>
+        <View style={[styles.balanceCard, { backgroundColor: theme.card }]}>
           <Text style={[styles.balanceLabel, { color: theme.textSecondary }]}>P/L HOJE</Text>
           <Text style={[styles.balanceValue, { color: pnl >= 0 ? theme.success : theme.error }]}>
             {pnl >= 0 ? '+' : ''}{formatCurrency(pnl)}
@@ -168,7 +168,7 @@ export default function DashboardScreen() {
       </View>
 
       {/* Gráfico */}
-      <View style={[styles.chartCard, { backgroundColor: theme.card, borderColor: theme.border }]}>
+      <View style={[styles.chartCard, { backgroundColor: theme.card }]}>
         <View style={styles.chartHeader}>
           <View style={styles.chartAsset}>
             <Text style={[styles.chartAssetText, { color: theme.text }]}>{asset}</Text>
@@ -236,26 +236,6 @@ export default function DashboardScreen() {
         </View>
       </View>
 
-      {/* Métricas */}
-      <View style={styles.metricsRow}>
-        <View style={[styles.metricCard, { backgroundColor: theme.card, borderColor: theme.border }]}>
-          <Ionicons name="swap-horizontal" size={18} color={theme.primary} />
-          <Text style={[styles.metricLabel, { color: theme.textSecondary }]}>Último Trade</Text>
-          <Text style={[styles.metricValue, { color: theme.text }]}>
-            {dashboard?.last_trade
-              ? `${dashboard.last_trade.order_type} @ ${formatCurrency(dashboard.last_trade.price)}`
-              : 'N/A'}
-          </Text>
-        </View>
-        <View style={[styles.metricCard, { backgroundColor: theme.card, borderColor: theme.border }]}>
-          <Ionicons name="flash" size={18} color={activeStrategy ? theme.success : theme.textSecondary} />
-          <Text style={[styles.metricLabel, { color: theme.textSecondary }]}>Estratégia</Text>
-          <Text style={[styles.metricValue, { color: theme.text }]}>
-            {activeStrategy ? `MA ${activeStrategy.ma_short_period}/${activeStrategy.ma_long_period}` : 'Nenhuma'}
-          </Text>
-        </View>
-      </View>
-
       {/* Botão de controle do bot */}
       <TouchableOpacity
         style={[styles.botBtn, { backgroundColor: isRunning ? theme.error : theme.success, opacity: botLoading ? 0.7 : 1 }]}
@@ -281,18 +261,18 @@ const createStyles = (theme: any) => StyleSheet.create({
   subtitle: { fontSize: 11, marginTop: 2 },
   statusBadge: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 12 },
   statusDot: { width: 7, height: 7, borderRadius: 4 },
-  statusText: { fontSize: 12, fontWeight: '700' },
+  statusText: { fontSize: 12, fontWeight: '500' },
   balanceRow: { flexDirection: 'row', gap: 10, marginHorizontal: 16, marginTop: 16 },
-  balanceCard: { flex: 1, padding: 14, borderRadius: 12, borderWidth: 1, gap: 4 },
-  balanceLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 0.6 },
-  balanceValue: { fontSize: 17, fontWeight: '800' },
+  balanceCard: { flex: 1, padding: 14, borderRadius: 12, gap: 4 },
+  balanceLabel: { fontSize: 10, fontWeight: '500' },
+  balanceValue: { fontSize: 17, fontWeight: '600' },
   chartCard: {
-    marginHorizontal: 16, marginTop: 14, borderRadius: 14, borderWidth: 1,
+    marginHorizontal: 16, marginTop: 14, borderRadius: 14,
     padding: 12, overflow: 'hidden',
   },
   chartHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
   chartAsset: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  chartAssetText: { fontSize: 14, fontWeight: '700' },
+  chartAssetText: { fontSize: 14, fontWeight: '600' },
   chartPrice: { fontSize: 13, fontWeight: '600' },
   legendRow: { flexDirection: 'row', gap: 10 },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: 4 },
@@ -303,16 +283,10 @@ const createStyles = (theme: any) => StyleSheet.create({
     height: 36, gap: 1, marginTop: 4,
   },
   volumeBar: { flex: 1, borderRadius: 1, minHeight: 4 },
-  metricsRow: { flexDirection: 'row', gap: 10, marginHorizontal: 16, marginTop: 14 },
-  metricCard: {
-    flex: 1, padding: 14, borderRadius: 12, borderWidth: 1, gap: 4, alignItems: 'flex-start',
-  },
-  metricLabel: { fontSize: 11, fontWeight: '600', marginTop: 2 },
-  metricValue: { fontSize: 13, fontWeight: '700' },
   botBtn: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     marginHorizontal: 16, marginTop: 14, marginBottom: 32,
     paddingVertical: 16, borderRadius: 14, gap: 8,
   },
-  botBtnText: { color: '#fff', fontSize: 17, fontWeight: '700' },
+  botBtnText: { color: '#fff', fontSize: 15, fontWeight: '600' },
 });
