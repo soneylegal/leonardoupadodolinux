@@ -53,7 +53,7 @@ async def get_dashboard(
                 Strategy.user_id == current_user.id,
                 Strategy.is_active == True
             )
-        )
+        ).limit(1)
     )
     active_strategy = result.scalar_one_or_none()
     asset = active_strategy.asset if active_strategy else "PETR4"
