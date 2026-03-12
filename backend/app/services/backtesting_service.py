@@ -9,6 +9,7 @@ from datetime import datetime
 from app.services.metatrader_service import MetaTrader5Service
 from app.services.technical_analysis_service import TechnicalAnalysisService
 from app.models.strategy import Strategy
+from app.models.log import Log, LogLevelEnum, LogTypeEnum
 
 
 class BacktestingService:
@@ -23,7 +24,8 @@ class BacktestingService:
         strategy: Strategy,
         start_date: datetime,
         end_date: datetime,
-        initial_balance: float = 10000.0
+        initial_balance: float = 10000.0,
+        db=None
     ) -> Dict:
         """Executa backtest de uma estratégia"""
         
@@ -75,7 +77,7 @@ class BacktestingService:
             "sell_prices": signal_points["sell_prices"]
         }
         
-        return {
+        result_data = {
             "total_return": metrics["total_return"],
             "win_rate": metrics["win_rate"],
             "max_drawdown": metrics["max_drawdown"],
@@ -83,10 +85,28 @@ class BacktestingService:
             "total_trades": metrics["total_trades"],
             "winning_trades": metrics["winning_trades"],
             "losing_trades": metrics["losing_trades"],
+            "avg_win": metrics.get("avg_win"),
+            "avg_loss": metrics.get("avg_loss"),
             "initial_balance": initial_balance,
             "final_balance": results["final_balance"],
             "chart_data": chart_data
         }
+
+        # Gravar log no banco
+        if db is not None:
+            try:
+                log = Log(
+                    user_id=strategy.user_id,
+                    level=LogLevelEnum.SUCCESS,
+                    log_type=LogTypeEnum.SYSTEM,
+                    message=f"Backtest concluído: {strategy.asset} | Retorno: {metrics['total_return']:+.1f}% | Win Rate: {metrics['win_rate']:.0f}% | Trades: {metrics['total_trades']}"
+                )
+                db.add(log)
+                await db.commit()
+            except Exception:
+                pass
+
+        return result_data
     
     def _simulate_trades(
         self,
@@ -206,6 +226,15 @@ class BacktestingService:
         else:
             sharpe_ratio = 0
         
+        # Ganho/perda médios
+        winning_pnls = [t.get("pnl", 0) for t in sell_trades if t.get("pnl", 0) > 0]
+        losing_pnls = [t.get("pnl", 0) for t in sell_trades if t.get("pnl", 0) <= 0]
+        avg_win = round(sum(winning_pnls) / len(winning_pnls), 2) if winning_pnls else None
+        avg_loss = round(sum(losing_pnls) / len(losing_pnls), 2) if losing_pnls else None
+        # Converter para percentual se possível
+        avg_win_pct = round((avg_win / initial_balance) * 100, 2) if avg_win and initial_balance else None
+        avg_loss_pct = round((avg_loss / initial_balance) * 100, 2) if avg_loss and initial_balance else None
+
         return {
             "total_return": round(total_return, 2),
             "win_rate": round(win_rate, 2),
@@ -213,7 +242,9 @@ class BacktestingService:
             "sharpe_ratio": round(sharpe_ratio, 2),
             "total_trades": total_trades,
             "winning_trades": winning_trades,
-            "losing_trades": losing_trades
+            "losing_trades": losing_trades,
+            "avg_win": avg_win_pct,
+            "avg_loss": avg_loss_pct,
         }
     
     def _empty_results(self, initial_balance: float) -> Dict:

@@ -152,6 +152,8 @@ class BacktestResponse(BaseModel):
     max_drawdown: float
     sharpe_ratio: float
     total_trades: int
+    avg_win: Optional[float] = None
+    avg_loss: Optional[float] = None
     chart_data: Optional[dict] = None
     created_at: datetime
     

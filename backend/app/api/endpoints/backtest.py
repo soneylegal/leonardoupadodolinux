@@ -57,7 +57,8 @@ async def run_backtest(
     results = await backtesting_service.run_backtest(
         strategy=strategy,
         start_date=start_date,
-        end_date=end_date
+        end_date=end_date,
+        db=db
     )
     
     # Salvar resultados

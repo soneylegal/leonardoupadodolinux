@@ -91,6 +91,8 @@ export interface BacktestResult {
   max_drawdown: number;
   sharpe_ratio: number;
   total_trades: number;
+  avg_win?: number;
+  avg_loss?: number;
   chart_data?: ChartData;
   created_at: string;
 }

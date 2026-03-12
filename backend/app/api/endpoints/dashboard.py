@@ -57,8 +57,18 @@ async def get_dashboard(
     active_strategy = result.scalar_one_or_none()
     asset = active_strategy.asset if active_strategy else "PETR4"
     
-    # Preço atual (simulado por enquanto)
-    current_price = 25.50  # Será substituído por dados reais do MT5
+    # Preço atual — simulado com seed determinística do ativo (consistente com o gráfico)
+    import random as _rnd
+    _base_prices = {
+        "PETR4": 37.80, "VALE3": 68.50, "ITUB4": 32.40,
+        "BBDC4": 15.20, "ABEV3": 12.90, "WEGE3": 42.10,
+        "MGLU3": 2.50,  "RENT3": 55.80,
+    }
+    _rng = _rnd.Random(sum(ord(c) for c in asset.upper()))
+    _p = _base_prices.get(asset.upper(), 25.00)
+    for _ in range(100):
+        _p = _p * (1 + _rng.gauss(0.0003, 0.008))
+    current_price = round(max(_p, 0.50), 2)
     
     return DashboardResponse(
         bot_status=BotStatus(
@@ -102,41 +112,70 @@ async def get_chart_data(
     timeframe: str = "1D",
     current_user: User = Depends(get_current_user)
 ):
-    """Retorna dados do gráfico para um ativo"""
-    # Por enquanto, retorna dados simulados
-    # Será integrado com MT5 posteriormente
-    
-    from datetime import datetime
-    import random
-    
+    """Retorna dados do gráfico para um ativo (simulado com seed determinística)"""
+    import random as _rnd
+    from datetime import datetime as _dt
+
+    # Seed determinística baseada no ativo — o gráfico é sempre o mesmo para o mesmo ativo
+    seed = sum(ord(c) for c in asset.upper())
+    rng = _rnd.Random(seed)
+
+    # Preço base por ativo (B3 simulado)
+    base_prices = {
+        "PETR4": 37.80, "VALE3": 68.50, "ITUB4": 32.40,
+        "BBDC4": 15.20, "ABEV3": 12.90, "WEGE3": 42.10,
+        "MGLU3": 2.50,  "RENT3": 55.80,
+    }
+    price = base_prices.get(asset.upper(), 25.00)
+
+    NUM_CANDLES = 100
+    SHORT_P = 9
+    LONG_P = 21
+
     candles = []
-    base_price = 25.0
-    ma_short = []
-    ma_long = []
-    
-    for i in range(100):
-        open_price = base_price + random.uniform(-0.5, 0.5)
-        close_price = open_price + random.uniform(-1, 1)
-        high = max(open_price, close_price) + random.uniform(0, 0.5)
-        low = min(open_price, close_price) - random.uniform(0, 0.5)
-        
+    closes: list[float] = []
+
+    for i in range(NUM_CANDLES):
+        drift = rng.gauss(0.0003, 0.008)        # leve tendência de alta + volatilidade
+        price = round(price * (1 + drift), 2)
+        price = max(price, 0.50)
+
+        spread = price * rng.uniform(0.003, 0.012)
+        open_p  = round(price + rng.uniform(-spread / 2, spread / 2), 2)
+        close_p = round(price + rng.uniform(-spread / 2, spread / 2), 2)
+        high_p  = round(max(open_p, close_p) + rng.uniform(0, spread * 0.6), 2)
+        low_p   = round(min(open_p, close_p) - rng.uniform(0, spread * 0.6), 2)
+        volume  = rng.randint(800_000, 6_000_000)
+
         candles.append({
-            "timestamp": datetime.now() - timedelta(days=100-i),
-            "open": round(open_price, 2),
-            "high": round(high, 2),
-            "low": round(low, 2),
-            "close": round(close_price, 2),
-            "volume": random.randint(1000000, 5000000)
+            "timestamp": _dt.now() - timedelta(days=NUM_CANDLES - i),
+            "open":   open_p,
+            "high":   high_p,
+            "low":    low_p,
+            "close":  close_p,
+            "volume": volume,
         })
-        
-        base_price = close_price
-        ma_short.append(round(base_price + random.uniform(-0.3, 0.3), 2))
-        ma_long.append(round(base_price + random.uniform(-0.5, 0.5), 2))
-    
+        closes.append(close_p)
+        price = close_p  # próximo candle abre perto do fechamento anterior
+
+    # MAs como SMA real das closes — nulas quando não há dados suficientes
+    def sma(values: list[float], period: int, idx: int) -> float | None:
+        if idx + 1 < period:
+            return None
+        window = values[max(0, idx + 1 - period): idx + 1]
+        return round(sum(window) / len(window), 2)
+
+    ma_short_list: list[float | None] = [sma(closes, SHORT_P, i) for i in range(NUM_CANDLES)]
+    ma_long_list:  list[float | None] = [sma(closes, LONG_P,  i) for i in range(NUM_CANDLES)]
+
+    # Remove Nones da frente (frontend espera mesma length que candles mas tolera nulos)
+    ma_short_clean = [v if v is not None else 0.0 for v in ma_short_list]
+    ma_long_clean  = [v if v is not None else 0.0 for v in ma_long_list]
+
     return ChartResponse(
         asset=asset,
         timeframe=timeframe,
         candles=candles,
-        ma_short=ma_short,
-        ma_long=ma_long
+        ma_short=ma_short_clean,
+        ma_long=ma_long_clean,
     )

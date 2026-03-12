@@ -1,7 +1,7 @@
 """
 Modelo de Estratégia de Trading
 """
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, Enum
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, Enum, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 import enum
@@ -63,7 +63,7 @@ class Strategy(Base):
     position_size = Column(Integer, default=100)  # Quantidade de ações
     
     # Estado
-    is_active = Column(Integer, default=False)
+    is_active = Column(Boolean, default=False)
     
     # Timestamps
     created_at = Column(DateTime(timezone=True), server_default=func.now())

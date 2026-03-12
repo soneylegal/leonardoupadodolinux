@@ -322,5 +322,26 @@ class TechnicalAnalysisService:
             return "neutral"
 
 
+    def get_signal_points(self, df: pd.DataFrame) -> Dict:
+        """Extrai pontos de compra e venda de um DataFrame já processado com generate_signals"""
+        buy_mask = df['Signal'] == 1
+        sell_mask = df['Signal'] == -1
+
+        buy_df = df[buy_mask]
+        sell_df = df[sell_mask]
+
+        def fmt_index(idx):
+            if hasattr(idx, 'strftime'):
+                return idx.strftime('%Y-%m-%d')
+            return str(idx)
+
+        return {
+            'buy_dates': [fmt_index(i) for i in buy_df.index.tolist()],
+            'buy_prices': buy_df['close'].tolist(),
+            'sell_dates': [fmt_index(i) for i in sell_df.index.tolist()],
+            'sell_prices': sell_df['close'].tolist(),
+        }
+
+
 # Instância global do serviço
 technical_analysis_service = TechnicalAnalysisService()

@@ -24,7 +24,7 @@ class UserSettings(Base):
     dark_mode_enabled = Column(Boolean, default=True)
     
     # Saldo simulado para paper trading
-    simulated_balance = Column(Integer, default=10000)  # Em centavos (R$ 10.000,00)
+    simulated_balance = Column(Integer, default=1000000)  # Em centavos (R$ 10.000,00)
     
     # Timestamps
     created_at = Column(DateTime(timezone=True), server_default=func.now())
