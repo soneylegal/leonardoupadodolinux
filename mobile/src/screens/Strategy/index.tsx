@@ -119,7 +119,7 @@ export default function StrategyScreen() {
       <View style={styles.body}>
         {/* Ativo */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>ATIVO</Text>
+          <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>Ativo</Text>
           <TouchableOpacity
             style={[styles.assetSelector, { backgroundColor: theme.card, borderColor: showAssetPicker ? theme.primary : theme.border }]}
             onPress={() => setShowAssetPicker(!showAssetPicker)}
@@ -150,7 +150,7 @@ export default function StrategyScreen() {
 
         {/* Timeframe */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>TIMEFRAME DO CANDLE</Text>
+          <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>Timeframe do candle</Text>
           <View style={styles.tfRow}>
             {TIMEFRAMES.map(tf => (
               <TouchableOpacity
@@ -166,10 +166,7 @@ export default function StrategyScreen() {
 
         {/* MAs */}
         <View style={[styles.section, styles.maCard, { backgroundColor: theme.card }]}>
-          <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>MÉDIAS MÓVEIS (MA CROSSOVER)</Text>
-          <Text style={[styles.maHint, { color: theme.textSecondary }]}>
-            O bot compra quando a MA Curta cruza acima da MA Longa, e vende no cruzamento inverso.
-          </Text>
+          <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>Médias móveis</Text>
 
           {/* MA Curta */}
           <View style={styles.sliderBlock}>
@@ -178,8 +175,8 @@ export default function StrategyScreen() {
                 <View style={[styles.maColorDot, { backgroundColor: '#fbbf24' }]} />
                 <Text style={[styles.sliderLabel, { color: theme.text }]}>MA Curta (rápida)</Text>
               </View>
-              <View style={[styles.valuePill, { backgroundColor: '#ffa726' + '25' }]}>
-                <Text style={[styles.valueText, { color: '#ffa726' }]}>{maShort}</Text>
+              <View style={[styles.valuePill, { backgroundColor: '#fbbf2420' }]}>
+                <Text style={[styles.valueText, { color: '#fbbf24' }]}>{maShort}</Text>
               </View>
             </View>
             <Slider style={styles.slider} minimumValue={2} maximumValue={50} step={1}
@@ -194,8 +191,8 @@ export default function StrategyScreen() {
                 <View style={[styles.maColorDot, { backgroundColor: '#93c5fd' }]} />
                 <Text style={[styles.sliderLabel, { color: theme.text }]}>MA Longa (lenta)</Text>
               </View>
-              <View style={[styles.valuePill, { backgroundColor: '#42a5f5' + '25' }]}>
-                <Text style={[styles.valueText, { color: '#42a5f5' }]}>{maLong}</Text>
+              <View style={[styles.valuePill, { backgroundColor: '#93c5fd20' }]}>
+                <Text style={[styles.valueText, { color: '#93c5fd' }]}>{maLong}</Text>
               </View>
             </View>
             <Slider style={styles.slider} minimumValue={5} maximumValue={200} step={1}
@@ -213,7 +210,7 @@ export default function StrategyScreen() {
 
         {/* Risco */}
         <View style={[styles.section, styles.riskCard, { backgroundColor: theme.card }]}>
-          <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>GERENCIAMENTO DE RISCO</Text>
+          <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>Gerenciamento de risco</Text>
           <View style={styles.riskRow}>
             <View style={styles.riskItem}>
               <Text style={[styles.riskLabel, { color: theme.textSecondary }]}>Stop Loss</Text>
@@ -237,8 +234,7 @@ export default function StrategyScreen() {
           <View style={[styles.ratioBar, { backgroundColor: theme.border }]}>
             <Ionicons name="git-compare-outline" size={14} color={theme.textSecondary} />
             <Text style={[styles.ratioText, { color: theme.textSecondary }]}>
-              Risco/Retorno: <Text style={{ color: theme.text, fontWeight: '700' }}>1:{riskRatio}</Text>
-              {parseFloat(riskRatio) >= 2 ? '  ✅ Bom' : '  ⚠️ Revise'}
+              Risco/Retorno: <Text style={{ color: theme.text }}>1:{riskRatio}</Text>
             </Text>
           </View>
         </View>
@@ -246,7 +242,7 @@ export default function StrategyScreen() {
         {/* Estratégias salvas */}
         {strategies.length > 0 && (
           <View style={styles.section}>
-            <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>ESTRATÉGIAS SALVAS</Text>
+            <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>Estratégias salvas</Text>
             {strategies.map(s => (
               <TouchableOpacity
                 key={s.id}
@@ -297,7 +293,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   activeBadgeText: { fontSize: 12, fontWeight: '600' },
   body: { padding: 16, gap: 20, paddingBottom: 40 },
   section: { gap: 10 },
-  sectionTitle: { fontSize: 11, fontWeight: '700', letterSpacing: 0.8 },
+  sectionTitle: { fontSize: 11, fontWeight: '500', opacity: 0.65, marginBottom: 4 },
   assetSelector: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
     padding: 14, borderRadius: 12, borderWidth: 1,
@@ -317,7 +313,6 @@ const createStyles = (theme: any) => StyleSheet.create({
   tfBtn: { flex: 1, alignItems: 'center', paddingVertical: 10, borderRadius: 10, borderWidth: 1 },
   tfLabel: { fontSize: 13, fontWeight: '600' },
   maCard: { borderRadius: 14, padding: 16 },
-  maHint: { fontSize: 12, lineHeight: 18, marginBottom: 4 },
   sliderBlock: { gap: 4 },
   sliderHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   sliderLabelRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },

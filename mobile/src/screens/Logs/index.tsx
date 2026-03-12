@@ -102,13 +102,10 @@ export default function LogsScreen() {
     const cfg = levelCfg(item.level);
     return (
       <View style={[styles.logItem, { backgroundColor: cfg.bg, borderLeftColor: cfg.border }]}>
-        <Ionicons name={cfg.icon} size={18} color={cfg.color} style={styles.logIcon} />
+        <Ionicons name={cfg.icon} size={16} color={cfg.color} style={styles.logIcon} />
         <View style={styles.logBody}>
           <Text style={styles.logMessage}>{item.message}</Text>
-          <Text style={[styles.logTime, { color: cfg.color }]}>{formatTime(item.created_at)}</Text>
-        </View>
-        <View style={[styles.levelBadge, { backgroundColor: cfg.border + '25' }]}>
-          <Text style={[styles.levelText, { color: cfg.color }]}>{item.level}</Text>
+          <Text style={[styles.logTime, { color: theme.textSecondary }]}>{formatTime(item.created_at)}</Text>
         </View>
       </View>
     );
@@ -123,7 +120,7 @@ export default function LogsScreen() {
           <View style={styles.statusRow}>
             <Animated.View style={[styles.dot, { transform: [{ scale: pulseAnim }] }]} />
             <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
-              Ao vivo · {lastUpdate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+              {lastUpdate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
             </Text>
             {newCount > 0 && (
               <View style={styles.newBadge}>
@@ -151,13 +148,6 @@ export default function LogsScreen() {
             </Text>
           </TouchableOpacity>
         ))}
-      </View>
-
-      {/* Contagem */}
-      <View style={styles.countRow}>
-        <Text style={[styles.countText, { color: theme.textSecondary }]}>
-          {filtered.length} {filtered.length === 1 ? 'entrada' : 'entradas'}
-        </Text>
       </View>
 
       {/* Lista */}
@@ -205,8 +195,6 @@ const createStyles = (theme: any) => StyleSheet.create({
     borderRadius: 20, borderWidth: 1, borderColor: 'transparent',
   },
   filterLabel: { fontSize: 11, fontWeight: '600' },
-  countRow: { paddingHorizontal: 16, paddingVertical: 6 },
-  countText: { fontSize: 11 },
   list: { paddingHorizontal: 12, paddingBottom: 24, gap: 5 },
   emptyContainer: { flex: 1 },
   logItem: {
@@ -215,10 +203,8 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   logIcon: { flexShrink: 0 },
   logBody: { flex: 1 },
-  logMessage: { color: '#ffffff', fontSize: 13, fontWeight: '500', lineHeight: 18 },
+  logMessage: { color: '#e6edf3', fontSize: 13, lineHeight: 18 },
   logTime: { fontSize: 10, marginTop: 3 },
-  levelBadge: { paddingHorizontal: 7, paddingVertical: 3, borderRadius: 6 },
-  levelText: { fontSize: 10, fontWeight: '700' },
   empty: { alignItems: 'center', justifyContent: 'center', paddingTop: 120, gap: 10 },
   emptyTitle: { fontSize: 16, fontWeight: '600' },
   emptyHint: { fontSize: 13, textAlign: 'center', paddingHorizontal: 40 },

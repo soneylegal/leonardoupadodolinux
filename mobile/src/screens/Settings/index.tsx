@@ -124,13 +124,10 @@ export default function SettingsScreen() {
         <View style={[styles.balanceCard, { backgroundColor: theme.primary + '18', borderColor: theme.primary + '44' }]}>
           <View style={styles.balanceTop}>
             <View>
-              <Text style={[styles.balanceLabel, { color: theme.textSecondary }]}>SALDO SIMULADO</Text>
+              <Text style={[styles.balanceLabel, { color: theme.textSecondary }]}>Saldo simulado</Text>
               <Text style={[styles.balanceValue, { color: theme.text }]}>
                 R$ {settings?.simulated_balance?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) ?? '10.000,00'}
               </Text>
-            </View>
-            <View style={[styles.balanceIcon, { backgroundColor: theme.primary + '22' }]}>
-              <Ionicons name="wallet" size={24} color={theme.primary} />
             </View>
           </View>
           <TouchableOpacity
@@ -144,7 +141,7 @@ export default function SettingsScreen() {
 
         {/* Status da conexão MT5 */}
         <View style={[styles.statusCard, { backgroundColor: theme.card, borderColor: theme.border }]}>
-          <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>STATUS DA CONEXÃO</Text>
+          <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>Status da conexão</Text>
           <View style={styles.statusRow}>
             <View style={styles.statusItem}>
               <View style={[styles.statusDot, { backgroundColor: apiConfigured ? theme.success : theme.error }]} />
@@ -192,7 +189,7 @@ export default function SettingsScreen() {
 
         {/* Chaves de API */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>CHAVE DE API (MT5)</Text>
+          <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>Chave de API (MT5)</Text>
           {apiConfigured && (
             <View style={[styles.configuredBadge, { backgroundColor: theme.success + '18' }]}>
               <Ionicons name="key" size={13} color={theme.success} />
@@ -236,7 +233,7 @@ export default function SettingsScreen() {
 
         {/* Toggles */}
         <View style={[styles.toggleSection, { backgroundColor: theme.card, borderColor: theme.border }]}>
-          <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>PREFERÊNCIAS</Text>
+          <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>Preferências</Text>
 
           <View style={[styles.toggleRow, { borderBottomColor: theme.border }]}>
             <View style={{ flex: 1 }}>
@@ -279,14 +276,6 @@ export default function SettingsScreen() {
           )}
         </TouchableOpacity>
 
-        {/* Info */}
-        <View style={[styles.infoBox, { backgroundColor: theme.card, borderColor: theme.border }]}>
-          <Ionicons name="information-circle-outline" size={16} color={theme.textSecondary} />
-          <Text style={[styles.infoText, { color: theme.textSecondary }]}>
-            O bot utiliza Paper Trading por padrão (saldo simulado).{'\n'}
-            MT5 real requer API Key válida e Paper Trading desativado.
-          </Text>
-        </View>
       </View>
     </ScrollView>
   );
@@ -305,12 +294,11 @@ const createStyles = (theme: any) => StyleSheet.create({
   modeDot: { width: 7, height: 7, borderRadius: 4 },
   modeBadgeText: { fontSize: 12, fontWeight: '700' },
   body: { padding: 16, gap: 20, paddingBottom: 40 },
-  sectionTitle: { fontSize: 11, fontWeight: '700', letterSpacing: 0.8, marginBottom: 10 },
-  balanceCard: { borderRadius: 14, padding: 16, borderWidth: 1, gap: 14 },
+  sectionTitle: { fontSize: 11, fontWeight: '500', opacity: 0.65, marginBottom: 10 },
+  balanceCard: { borderRadius: 12, padding: 16, borderWidth: 1, gap: 12 },
   balanceTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  balanceLabel: { fontSize: 11, fontWeight: '700', letterSpacing: 0.8 },
-  balanceValue: { fontSize: 24, fontWeight: '600', marginTop: 4 },
-  balanceIcon: { width: 48, height: 48, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
+  balanceLabel: { fontSize: 11, opacity: 0.7, marginBottom: 2 },
+  balanceValue: { fontSize: 22, fontWeight: '600', marginTop: 2 },
   resetBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, borderWidth: 1, borderRadius: 10, paddingVertical: 9 },
   resetBtnText: { fontSize: 13, fontWeight: '600' },
   statusCard: { borderRadius: 14, padding: 16, borderWidth: 1, gap: 12 },
@@ -331,10 +319,8 @@ const createStyles = (theme: any) => StyleSheet.create({
   eyeBtn: { padding: 4 },
   toggleSection: { borderRadius: 14, padding: 16, borderWidth: 1, gap: 4 },
   toggleRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 12, borderBottomWidth: 0 },
-  toggleLabel: { fontSize: 15, fontWeight: '600' },
+  toggleLabel: { fontSize: 15, fontWeight: '500' },
   toggleDesc: { fontSize: 12, marginTop: 2 },
-  saveBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 16, borderRadius: 14, gap: 8 },
-  saveBtnText: { color: '#fff', fontSize: 16, fontWeight: '700' },
-  infoBox: { flexDirection: 'row', gap: 10, padding: 14, borderRadius: 12, borderWidth: 1, alignItems: 'flex-start' },
-  infoText: { fontSize: 12, lineHeight: 18, flex: 1 },
+  saveBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 15, borderRadius: 10, gap: 8 },
+  saveBtnText: { color: '#fff', fontSize: 15, fontWeight: '600' },
 });
