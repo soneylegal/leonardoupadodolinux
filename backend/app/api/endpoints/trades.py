@@ -3,7 +3,7 @@ Endpoints de Trades
 """
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_
+from sqlalchemy import select, and_, cast, String
 from typing import List
 from datetime import datetime
 
@@ -97,7 +97,7 @@ async def get_open_positions(
         .where(
             and_(
                 Trade.user_id == current_user.id,
-                Trade.status == OrderStatusEnum.EXECUTED
+                cast(Trade.status, String) == OrderStatusEnum.EXECUTED.value
             )
         )
         .order_by(Trade.executed_at.desc())

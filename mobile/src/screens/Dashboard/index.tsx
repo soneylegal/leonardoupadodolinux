@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   RefreshControl,
   Dimensions,
+  Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LineChart } from 'react-native-chart-kit';
@@ -194,26 +195,47 @@ export default function DashboardScreen() {
           </View>
         </View>
 
-        <LineChart
-          data={chartDisplayData}
-          width={CHART_WIDTH}
-          height={180}
-          chartConfig={{
-            backgroundColor: theme.card,
-            backgroundGradientFrom: theme.card,
-            backgroundGradientTo: theme.card,
-            decimalPlaces: 2,
-            color: (opacity = 1) => `rgba(0,212,170,${opacity})`,
-            labelColor: () => theme.textSecondary,
-            propsForDots: { r: '0' },
-          }}
-          bezier
-          withInnerLines={false}
-          withOuterLines={false}
-          withHorizontalLabels={false}
-          withVerticalLabels={false}
-          style={{ borderRadius: 8, marginLeft: -10 }}
-        />
+        {Platform.OS === 'web' ? (
+          <View style={styles.webChart}>
+            {candles30.length >= 2 ? (
+              <View style={styles.webChartBars}>
+                {candles30.map((c, i) => {
+                  const isGreen = i === 0 || c.close >= candles30[i - 1].close;
+                  return (
+                    <View key={i} style={[styles.webBar, {
+                      backgroundColor: isGreen ? '#34d399' : '#f87171',
+                    }]} />
+                  );
+                })}
+              </View>
+            ) : (
+              <Text style={[styles.webChartLabel, { color: theme.textSecondary }]}>
+                Aguardando dados…
+              </Text>
+            )}
+          </View>
+        ) : (
+          <LineChart
+            data={chartDisplayData}
+            width={CHART_WIDTH}
+            height={180}
+            chartConfig={{
+              backgroundColor: theme.card,
+              backgroundGradientFrom: theme.card,
+              backgroundGradientTo: theme.card,
+              decimalPlaces: 2,
+              color: (opacity = 1) => `rgba(0,212,170,${opacity})`,
+              labelColor: () => theme.textSecondary,
+              propsForDots: { r: '0' },
+            }}
+            bezier
+            withInnerLines={false}
+            withOuterLines={false}
+            withHorizontalLabels={false}
+            withVerticalLabels={false}
+            style={{ borderRadius: 8, marginLeft: -10 }}
+          />
+        )}
 
         {/* Barras de volume — alturas fixas baseadas nos dados reais */}
         <View style={styles.volumeContainer}>
@@ -289,4 +311,8 @@ const createStyles = (theme: any) => StyleSheet.create({
     paddingVertical: 16, borderRadius: 14, gap: 8,
   },
   botBtnText: { color: '#fff', fontSize: 15, fontWeight: '600' },
+  webChart: { height: 180, justifyContent: 'center', alignItems: 'center' },
+  webChartBars: { flexDirection: 'row', alignItems: 'flex-end', height: 160, width: '100%', gap: 2 },
+  webBar: { flex: 1, height: '60%', borderRadius: 2, opacity: 0.7 },
+  webChartLabel: { fontSize: 13, textAlign: 'center' },
 });
