@@ -90,7 +90,7 @@ class BotManager:
                     result = await db.execute(
                         select(Strategy).where(
                             and_(Strategy.user_id == self.user_id, Strategy.is_active == True)
-                        )
+                        ).limit(1)
                     )
                     strategy = result.scalar_one_or_none()
 
