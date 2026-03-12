@@ -11,6 +11,7 @@ from app.api.endpoints.auth import get_current_user
 from app.models.user import User
 from app.models.trade import Trade
 from app.models.strategy import Strategy
+from app.models.settings import UserSettings
 from app.schemas.schemas import DashboardResponse, BotStatus, TradeResponse, ChartResponse
 
 router = APIRouter()
@@ -70,6 +71,13 @@ async def get_dashboard(
         _p = _p * (1 + _rng.gauss(0.0003, 0.008))
     current_price = round(max(_p, 0.50), 2)
     
+    # Obter saldo simulado
+    settings_result = await db.execute(
+        select(UserSettings).where(UserSettings.user_id == current_user.id)
+    )
+    user_settings = settings_result.scalar_one_or_none()
+    simulated_balance = (user_settings.simulated_balance / 100) if user_settings else 10000.0
+
     return DashboardResponse(
         bot_status=BotStatus(
             is_running=is_running,
@@ -78,7 +86,8 @@ async def get_dashboard(
         todays_pnl=todays_pnl,
         last_trade=TradeResponse.model_validate(last_trade) if last_trade else None,
         current_price=current_price,
-        asset=asset
+        asset=asset,
+        simulated_balance=simulated_balance
     )
 
 

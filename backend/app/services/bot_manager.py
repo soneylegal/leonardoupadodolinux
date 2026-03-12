@@ -177,14 +177,16 @@ class BotManager:
                         )
                         db.add(trade)
 
-                        # Atualizar saldo simulado
-                        if profit_loss is not None:
-                            settings_result = await db.execute(
-                                select(UserSettings).where(UserSettings.user_id == self.user_id)
-                            )
-                            settings = settings_result.scalar_one_or_none()
-                            if settings:
-                                settings.simulated_balance += int(profit_loss * 100)
+                        # Atualizar saldo simulado (deduz na compra, credita na venda)
+                        settings_result = await db.execute(
+                            select(UserSettings).where(UserSettings.user_id == self.user_id)
+                        )
+                        settings = settings_result.scalar_one_or_none()
+                        if settings:
+                            if signal == "BUY":
+                                settings.simulated_balance -= int(total * 100)
+                            else:  # SELL
+                                settings.simulated_balance += int(total * 100)
 
                         await db.commit()
 

@@ -186,6 +186,7 @@ class DashboardResponse(BaseModel):
     last_trade: Optional[TradeResponse] = None
     current_price: float
     asset: str
+    simulated_balance: float
 
 
 # ================= CHART DATA SCHEMAS =================

@@ -127,6 +127,7 @@ export interface DashboardData {
   last_trade: Trade | null;
   current_price: number;
   asset: string;
+  simulated_balance: number;
 }
 
 // ================= CHART =================
