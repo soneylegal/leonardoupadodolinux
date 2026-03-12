@@ -86,10 +86,10 @@ export default function LogsScreen() {
 
   const levelCfg = (level: LogLevel) => {
     switch (level) {
-      case 'SUCCESS': return { bg: '#0d2b1e', border: '#00d4aa', icon: 'checkmark-circle' as const, color: '#00d4aa' };
-      case 'ERROR':   return { bg: '#2b0d0d', border: '#ff6b6b', icon: 'close-circle' as const,     color: '#ff6b6b' };
-      case 'WARNING': return { bg: '#2b200d', border: '#ffa726', icon: 'warning' as const,           color: '#ffa726' };
-      default:        return { bg: '#0d1a2b', border: '#29b6f6', icon: 'information-circle' as const, color: '#29b6f6' };
+      case 'SUCCESS': return { bg: '#0f2620', border: '#34d399', icon: 'checkmark-circle' as const, color: '#34d399' };
+      case 'ERROR':   return { bg: '#271212', border: '#f87171', icon: 'close-circle' as const,     color: '#f87171' };
+      case 'WARNING': return { bg: '#241b0a', border: '#f59e0b', icon: 'warning' as const,           color: '#f59e0b' };
+      default:        return { bg: '#0e1f30', border: '#38bdf8', icon: 'information-circle' as const, color: '#38bdf8' };
     }
   };
 
@@ -190,10 +190,10 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   title: { fontSize: 19, fontWeight: '700' },
   statusRow: { flexDirection: 'row', alignItems: 'center', marginTop: 3, gap: 5 },
-  dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: '#00d4aa' },
+  dot: { width: 7, height: 7, borderRadius: 4, backgroundColor: '#34d399' },
   subtitle: { fontSize: 11 },
-  newBadge: { backgroundColor: '#00d4aa22', borderRadius: 8, paddingHorizontal: 7, paddingVertical: 2 },
-  newBadgeText: { color: '#00d4aa', fontSize: 10, fontWeight: '700' },
+  newBadge: { backgroundColor: '#34d39920', borderRadius: 6, paddingHorizontal: 7, paddingVertical: 2 },
+  newBadgeText: { color: '#34d399', fontSize: 10, fontWeight: '500' },
   clearBtn: { padding: 9, borderRadius: 10, marginLeft: 10 },
   filterRow: {
     flexDirection: 'row', paddingHorizontal: 10, paddingVertical: 10,

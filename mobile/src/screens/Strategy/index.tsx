@@ -175,7 +175,7 @@ export default function StrategyScreen() {
           <View style={styles.sliderBlock}>
             <View style={styles.sliderHeader}>
               <View style={styles.sliderLabelRow}>
-                <View style={[styles.maColorDot, { backgroundColor: '#ffa726' }]} />
+                <View style={[styles.maColorDot, { backgroundColor: '#fbbf24' }]} />
                 <Text style={[styles.sliderLabel, { color: theme.text }]}>MA Curta (rápida)</Text>
               </View>
               <View style={[styles.valuePill, { backgroundColor: '#ffa726' + '25' }]}>
@@ -184,14 +184,14 @@ export default function StrategyScreen() {
             </View>
             <Slider style={styles.slider} minimumValue={2} maximumValue={50} step={1}
               value={maShort} onValueChange={v => setMaShort(v)}
-              minimumTrackTintColor='#ffa726' maximumTrackTintColor={theme.border} thumbTintColor='#ffa726' />
+              minimumTrackTintColor='#fbbf24' maximumTrackTintColor={theme.border} thumbTintColor='#fbbf24' />
           </View>
 
           {/* MA Longa */}
           <View style={styles.sliderBlock}>
             <View style={styles.sliderHeader}>
               <View style={styles.sliderLabelRow}>
-                <View style={[styles.maColorDot, { backgroundColor: '#42a5f5' }]} />
+                <View style={[styles.maColorDot, { backgroundColor: '#93c5fd' }]} />
                 <Text style={[styles.sliderLabel, { color: theme.text }]}>MA Longa (lenta)</Text>
               </View>
               <View style={[styles.valuePill, { backgroundColor: '#42a5f5' + '25' }]}>
@@ -200,7 +200,7 @@ export default function StrategyScreen() {
             </View>
             <Slider style={styles.slider} minimumValue={5} maximumValue={200} step={1}
               value={maLong} onValueChange={v => setMaLong(v)}
-              minimumTrackTintColor='#42a5f5' maximumTrackTintColor={theme.border} thumbTintColor='#42a5f5' />
+              minimumTrackTintColor='#93c5fd' maximumTrackTintColor={theme.border} thumbTintColor='#93c5fd' />
           </View>
 
           {maShort >= maLong && (
@@ -324,7 +324,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   maColorDot: { width: 10, height: 10, borderRadius: 5 },
   sliderLabel: { fontSize: 14, fontWeight: '500' },
   valuePill: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8 },
-  valueText: { fontSize: 15, fontWeight: '800' },
+  valueText: { fontSize: 15, fontWeight: '600' },
   slider: { width: '100%', height: 36 },
   warning: { flexDirection: 'row', alignItems: 'center', gap: 6, padding: 10, borderRadius: 8 },
   warningText: { fontSize: 12 },
@@ -333,7 +333,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   riskItem: { flex: 1, gap: 6 },
   riskLabel: { fontSize: 12, fontWeight: '600' },
   riskInput: { alignItems: 'center', paddingVertical: 8, borderRadius: 8, borderWidth: 1 },
-  riskValue: { fontSize: 18, fontWeight: '800' },
+  riskValue: { fontSize: 18, fontWeight: '600' },
   ratioBar: { flexDirection: 'row', alignItems: 'center', gap: 8, padding: 10, borderRadius: 8 },
   ratioText: { fontSize: 13 },
   strategyCard: {

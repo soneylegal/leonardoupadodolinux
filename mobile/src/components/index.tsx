@@ -61,12 +61,12 @@ export const Button: React.FC<ButtonProps> = ({
   const getBackgroundColor = () => {
     if (disabled) return '#666';
     switch (variant) {
-      case 'primary': return '#0077ff';
-      case 'secondary': return '#4a4a4a';
-      case 'success': return '#00d4aa';
-      case 'danger': return '#ff6b6b';
+      case 'primary': return '#4f83f8';
+      case 'secondary': return '#374151';
+      case 'success': return '#34d399';
+      case 'danger': return '#f87171';
       case 'outline': return 'transparent';
-      default: return '#0077ff';
+      default: return '#4f83f8';
     }
   };
 
@@ -87,11 +87,11 @@ export const Button: React.FC<ButtonProps> = ({
     justifyContent: 'center',
     gap: 8,
     ...getPadding(),
-    ...(variant === 'outline' && { borderWidth: 1, borderColor: '#0077ff' }),
+    ...(variant === 'outline' && { borderWidth: 1, borderColor: '#4f83f8' }),
     ...style,
   };
 
-  const textColor = variant === 'outline' ? '#0077ff' : '#fff';
+  const textColor = variant === 'outline' ? '#4f83f8' : '#fff';
 
   return (
     <TouchableOpacity
@@ -246,11 +246,11 @@ interface StatusBadgeProps {
 export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, text }) => {
   const getStatusColor = () => {
     switch (status) {
-      case 'running': return '#00d4aa';
-      case 'stopped': return '#666';
-      case 'error': return '#ff6b6b';
-      case 'warning': return '#ffa726';
-      default: return '#666';
+      case 'running': return '#34d399';
+      case 'stopped': return '#4b5563';
+      case 'error': return '#f87171';
+      case 'warning': return '#f59e0b';
+      default: return '#4b5563';
     }
   };
 

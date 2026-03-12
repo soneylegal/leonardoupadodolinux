@@ -309,7 +309,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   balanceCard: { borderRadius: 14, padding: 16, borderWidth: 1, gap: 14 },
   balanceTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   balanceLabel: { fontSize: 11, fontWeight: '700', letterSpacing: 0.8 },
-  balanceValue: { fontSize: 26, fontWeight: '800', marginTop: 4 },
+  balanceValue: { fontSize: 24, fontWeight: '600', marginTop: 4 },
   balanceIcon: { width: 48, height: 48, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
   resetBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, borderWidth: 1, borderRadius: 10, paddingVertical: 9 },
   resetBtnText: { fontSize: 13, fontWeight: '600' },
