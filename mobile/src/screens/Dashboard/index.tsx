@@ -23,6 +23,55 @@ import { DashboardData, ChartResponseData } from '../../types';
 const { width: screenWidth } = Dimensions.get('window');
 const CHART_WIDTH = screenWidth - 64; // margem 20 + padding 12 cada lado
 
+// Sparkline simples para web (evita onResponder warnings do react-native-chart-kit no SVG)
+function WebSparkline({ candles, height, cardColor }: { candles: any[]; height: number; cardColor: string }) {
+  if (candles.length < 2) {
+    return (
+      <View style={{ height, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ color: '#6b7280', fontSize: 13 }}>Aguardando dados…</Text>
+      </View>
+    );
+  }
+  const prices = candles.map((c: any) => c.close);
+  const minP = Math.min(...prices);
+  const maxP = Math.max(...prices);
+  const range = maxP - minP || 1;
+  const W = 340;
+  const H = height - 8;
+  const pad = 4;
+  const step = (W - pad * 2) / (prices.length - 1);
+
+  const pts = prices
+    .map((p: number, i: number) => {
+      const x = pad + i * step;
+      const y = pad + (1 - (p - minP) / range) * (H - pad * 2);
+      return `${x},${y}`;
+    })
+    .join(' ');
+
+  const fillPts = `${pad},${H - pad} ${pts} ${pad + (prices.length - 1) * step},${H - pad}`;
+
+  return (
+    <View style={{ height, width: '100%', overflow: 'hidden' }}>
+      {/* @ts-ignore — SVG nativo no web sem react-native-svg */}
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        preserveAspectRatio="none"
+        style={{ width: '100%', height: '100%' }}
+      >
+        <defs>
+          <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#34d399" stopOpacity="0.25" />
+            <stop offset="100%" stopColor="#34d399" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <polygon points={fillPts} fill="url(#sg)" />
+        <polyline points={pts} fill="none" stroke="#34d399" strokeWidth="2" strokeLinejoin="round" />
+      </svg>
+    </View>
+  );
+}
+
 export default function DashboardScreen() {
   const { isDarkMode } = useThemeStore();
   const theme = getTheme(isDarkMode);
@@ -196,24 +245,7 @@ export default function DashboardScreen() {
         </View>
 
         {Platform.OS === 'web' ? (
-          <View style={styles.webChart}>
-            {candles30.length >= 2 ? (
-              <View style={styles.webChartBars}>
-                {candles30.map((c, i) => {
-                  const isGreen = i === 0 || c.close >= candles30[i - 1].close;
-                  return (
-                    <View key={i} style={[styles.webBar, {
-                      backgroundColor: isGreen ? '#34d399' : '#f87171',
-                    }]} />
-                  );
-                })}
-              </View>
-            ) : (
-              <Text style={[styles.webChartLabel, { color: theme.textSecondary }]}>
-                Aguardando dados…
-              </Text>
-            )}
-          </View>
+          <WebSparkline candles={candles30} height={180} cardColor={theme.card} />
         ) : (
           <LineChart
             data={chartDisplayData}
@@ -311,8 +343,4 @@ const createStyles = (theme: any) => StyleSheet.create({
     paddingVertical: 16, borderRadius: 14, gap: 8,
   },
   botBtnText: { color: '#fff', fontSize: 15, fontWeight: '600' },
-  webChart: { height: 180, justifyContent: 'center', alignItems: 'center' },
-  webChartBars: { flexDirection: 'row', alignItems: 'flex-end', height: 160, width: '100%', gap: 2 },
-  webBar: { flex: 1, height: '60%', borderRadius: 2, opacity: 0.7 },
-  webChartLabel: { fontSize: 13, textAlign: 'center' },
 });
