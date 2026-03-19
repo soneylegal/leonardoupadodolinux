@@ -58,6 +58,7 @@ export interface StrategyFormData {
   stop_loss_percent: number;
   take_profit_percent: number;
   position_size: number;
+  is_active?: boolean;
 }
 
 // ================= TRADE =================

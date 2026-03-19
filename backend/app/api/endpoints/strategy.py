@@ -3,7 +3,7 @@ Endpoints de Estratégias
 """
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, update
 from typing import List
 
 from app.core.database import get_db
@@ -35,17 +35,21 @@ async def create_strategy(
     db: AsyncSession = Depends(get_db)
 ):
     """Cria uma nova estratégia"""
+    # Desativa todas as outras estratégias do usuário
+    await db.execute(
+        update(Strategy).where(Strategy.user_id == current_user.id).values(is_active=False)
+    )
+    
     strategy = Strategy(
         user_id=current_user.id,
+        is_active=True,
         **strategy_data.model_dump()
     )
     db.add(strategy)
     await db.commit()
     await db.refresh(strategy)
-    
+
     return strategy
-
-
 @router.get("/{strategy_id}", response_model=StrategyResponse)
 async def get_strategy(
     strategy_id: int,
@@ -94,6 +98,13 @@ async def update_strategy(
     
     # Atualizar campos
     update_data = strategy_data.model_dump(exclude_unset=True)
+    
+    if update_data.get("is_active"):
+        # Se ativando esta, desativa as outras
+        await db.execute(
+            update(Strategy).where(Strategy.user_id == current_user.id).values(is_active=False)
+        )
+        
     for field, value in update_data.items():
         setattr(strategy, field, value)
     

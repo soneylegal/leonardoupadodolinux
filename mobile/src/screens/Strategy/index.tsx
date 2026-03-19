@@ -81,7 +81,7 @@ export default function StrategyScreen() {
         take_profit_percent: takeProfit,
       };
       if (isEdit) {
-        await updateStrategy(currentStrategy.id, payload);
+        await updateStrategy(currentStrategy.id, { ...payload, is_active: true });
       } else {
         const s = await createStrategy({ name: `Estratégia ${selectedAsset}`, ...payload, position_size: 100 });
         setCurrentStrategy(s);

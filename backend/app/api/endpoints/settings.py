@@ -101,6 +101,11 @@ async def test_connection(
     settings = result.scalar_one_or_none()
     
     if not settings or not settings.api_key_encrypted:
+        if settings and settings.paper_trading_enabled:
+            return {
+                "status": "success",
+                "message": "Conectado ao ambiente simulado (Paper Trading)"
+            }
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Credenciais de API não configuradas"

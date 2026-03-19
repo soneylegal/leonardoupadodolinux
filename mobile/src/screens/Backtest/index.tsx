@@ -4,7 +4,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import {
   View, Text, StyleSheet, ScrollView, TouchableOpacity,
-  ActivityIndicator, Dimensions,
+  ActivityIndicator, Dimensions, Platform
 } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { Ionicons } from '@expo/vector-icons';
@@ -26,12 +26,12 @@ type Metric = { label: string; description: string; value: string; color: string
 export default function BacktestScreen() {
   const { isDarkMode } = useThemeStore();
   const theme = getTheme(isDarkMode);
-  const { strategies, currentStrategy, loadStrategies } = useStrategyStore();
-
+  const { strategies, currentStrategy, loadStrategies, setCurrentStrategy } = useStrategyStore();
   const [selectedPeriod, setSelectedPeriod] = useState('6M');
   const [result, setResult] = useState<BacktestResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [lastRan, setLastRan] = useState<Date | null>(null);
+  const [showStratPicker, setShowStratPicker] = useState(false);
 
   useEffect(() => { loadStrategies(); }, []);
 
@@ -105,6 +105,67 @@ export default function BacktestScreen() {
     datasets: [{ data: equityCurve }],
   };
 
+  const renderChart = () => {
+    if (Platform.OS === 'web') {
+      const minP = Math.min(...equityCurve);
+      const maxP = Math.max(...equityCurve);
+      const range = maxP - minP || 1;
+      const W = screenWidth - 88;
+      const H = 180;
+      const pad = 10;
+      const step = (W - pad * 2) / (Math.max(equityCurve.length - 1, 1));
+      
+      const pts = equityCurve.map((p, i) => {
+        const x = pad + i * step;
+        const y = pad + (1 - (p - minP) / range) * (H - pad * 2);
+        return `${x},${y}`;
+      }).join(' ');
+      
+      const fillPts = `${pad},${H - pad} ${pts} ${pad + (equityCurve.length - 1) * step},${H - pad}`;
+
+      return (
+        <View style={{ height: H, width: '100%', overflow: 'hidden', padding: 12 }}>
+          {/* @ts-ignore */}
+          <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
+            <defs>
+              <linearGradient id="eqGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#42a5f5" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="#42a5f5" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <polygon points={fillPts} fill="url(#eqGrad)" />
+            <polyline points={pts} fill="none" stroke="#42a5f5" strokeWidth="3" strokeLinejoin="round" />
+          </svg>
+        </View>
+      );
+    }
+
+    return (
+      <LineChart
+        data={chartData}
+        width={screenWidth - 64}
+        height={180}
+        chartConfig={{
+          backgroundColor: theme.card,
+          backgroundGradientFrom: theme.card,
+          backgroundGradientTo: theme.card,
+          decimalPlaces: 0,
+          color: (op = 1) => `rgba(66,165,245,${op})`,
+          labelColor: () => theme.textSecondary,
+          fillShadowGradient: '#42a5f5',
+          fillShadowGradientOpacity: 0.2,
+          propsForDots: { r: '0' },
+        }}
+        bezier
+        withInnerLines={false}
+        withOuterLines={false}
+        withHorizontalLabels={false}
+        withVerticalLabels={false}
+        style={{ borderRadius: 12 }}
+      />
+    );
+  };
+
   const styles = createStyles(theme);
 
   return (
@@ -126,28 +187,55 @@ export default function BacktestScreen() {
 
       <View style={styles.body}>
         {/* Estratégia ativa */}
-        <View style={[styles.stratCard, { backgroundColor: theme.card, borderColor: theme.border }]}>
-          {activeStrategy ? (
-            <>
-              <View style={[styles.stratIcon, { backgroundColor: theme.primary + '22' }]}>
-                <Ionicons name="flash" size={20} color={theme.primary} />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={[styles.stratName, { color: theme.text }]}>{activeStrategy.name}</Text>
-                <Text style={[styles.stratDetail, { color: theme.textSecondary }]}>
-                  {activeStrategy.asset} · {activeStrategy.timeframe} · MA {activeStrategy.ma_short_period}/{activeStrategy.ma_long_period}
-                  {activeStrategy.stop_loss_percent ? `  · SL ${activeStrategy.stop_loss_percent}%` : ''}
+        <View style={{ gap: 8 }}>
+          <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>ESTRATÉGIA</Text>
+          <TouchableOpacity 
+            style={[styles.stratCard, { backgroundColor: theme.card, borderColor: showStratPicker ? theme.primary : theme.border }]}
+            onPress={() => setShowStratPicker(!showStratPicker)}
+            disabled={strategies.length === 0}
+          >
+            {activeStrategy ? (
+              <>
+                <View style={[styles.stratIcon, { backgroundColor: theme.primary + '22' }]}>
+                  <Ionicons name="flash" size={20} color={theme.primary} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.stratName, { color: theme.text }]}>{activeStrategy.name}</Text>
+                  <Text style={[styles.stratDetail, { color: theme.textSecondary }]}>
+                    {activeStrategy.asset} · {activeStrategy.timeframe} · MA {activeStrategy.ma_short_period}/{activeStrategy.ma_long_period}
+                    {activeStrategy.stop_loss_percent ? `  · SL ${activeStrategy.stop_loss_percent}%` : ''}
+                  </Text>
+                </View>
+                <Ionicons name="checkmark-circle" size={18} color={theme.success} />
+              </>
+            ) : (
+              <>
+                <Ionicons name="alert-circle-outline" size={22} color="#ffa726" />
+                <Text style={[styles.stratDetail, { color: theme.textSecondary, flex: 1 }]}>
+                  Nenhuma estratégia configurada. Vá em "Estratégia" e crie uma.
                 </Text>
-              </View>
-              <Ionicons name="checkmark-circle" size={18} color={theme.success} />
-            </>
-          ) : (
-            <>
-              <Ionicons name="alert-circle-outline" size={22} color="#ffa726" />
-              <Text style={[styles.stratDetail, { color: theme.textSecondary, flex: 1 }]}>
-                Nenhuma estratégia configurada. Vá em "Estratégia" e crie uma.
-              </Text>
-            </>
+              </>
+            )}
+            {strategies.length > 0 && (
+              <Ionicons name={showStratPicker ? "chevron-up" : "chevron-down"} size={20} color={theme.textSecondary} style={{ marginLeft: 8 }} />
+            )}
+          </TouchableOpacity>
+          {showStratPicker && strategies.length > 0 && (
+            <View style={{ backgroundColor: theme.card, borderRadius: 12, borderWidth: 1, borderColor: theme.border, overflow: 'hidden', marginBottom: 12 }}>
+              {strategies.map(s => (
+                <TouchableOpacity
+                  key={s.id}
+                  style={{ padding: 14, borderBottomWidth: 1, borderBottomColor: theme.border, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
+                  onPress={() => { setCurrentStrategy(s); setShowStratPicker(false); setResult(null); }}
+                >
+                  <View>
+                    <Text style={{ color: theme.text, fontWeight: '600' }}>{s.name}</Text>
+                    <Text style={{ color: theme.textSecondary, fontSize: 12 }}>{s.asset} · {s.timeframe}</Text>
+                  </View>
+                  {currentStrategy?.id === s.id && <Ionicons name="checkmark" size={16} color={theme.primary} />}
+                </TouchableOpacity>
+              ))}
+            </View>
           )}
         </View>
 
@@ -216,28 +304,7 @@ export default function BacktestScreen() {
             <View>
               <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>CURVA DE CAPITAL</Text>
               <View style={[styles.chartCard, { backgroundColor: theme.card }]}>
-                <LineChart
-                  data={chartData}
-                  width={screenWidth - 64}
-                  height={180}
-                  chartConfig={{
-                    backgroundColor: theme.card,
-                    backgroundGradientFrom: theme.card,
-                    backgroundGradientTo: theme.card,
-                    decimalPlaces: 0,
-                    color: (op = 1) => `rgba(66,165,245,${op})`,
-                    labelColor: () => theme.textSecondary,
-                    fillShadowGradient: '#42a5f5',
-                    fillShadowGradientOpacity: 0.2,
-                    propsForDots: { r: '0' },
-                  }}
-                  bezier
-                  withInnerLines={false}
-                  withOuterLines={false}
-                  withHorizontalLabels={false}
-                  withVerticalLabels={false}
-                  style={{ borderRadius: 12 }}
-                />
+                {renderChart()}
               </View>
             </View>
 

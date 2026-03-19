@@ -67,7 +67,8 @@ export default function SettingsScreen() {
       const r = await settingsService.testConnection();
       setTestResult({ ok: true, message: r.message, time: new Date().toLocaleTimeString('pt-BR') });
     } catch (e: any) {
-      setTestResult({ ok: false, message: e?.message ?? 'Falha na conexão', time: new Date().toLocaleTimeString('pt-BR') });
+      const errMessage = e.response?.data?.detail || e.message || 'Falha na conexão';
+      setTestResult({ ok: false, message: errMessage, time: new Date().toLocaleTimeString('pt-BR') });
     } finally {
       setSaving(false);
     }

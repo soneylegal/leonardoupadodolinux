@@ -83,7 +83,7 @@ class BotManager:
         while self.is_running:
             try:
                 tick += 1
-                await asyncio.sleep(30)
+                await asyncio.sleep(1)  # changed to 1s for fast simulation
 
                 # Buscar estratégia ativa do usuário
                 async with AsyncSessionLocal() as db:

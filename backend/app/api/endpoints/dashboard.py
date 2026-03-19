@@ -60,14 +60,21 @@ async def get_dashboard(
     
     # Preço atual — simulado com seed determinística do ativo (consistente com o gráfico)
     import random as _rnd
+    import time
+    
     _base_prices = {
         "PETR4": 37.80, "VALE3": 68.50, "ITUB4": 32.40,
         "BBDC4": 15.20, "ABEV3": 12.90, "WEGE3": 42.10,
         "MGLU3": 2.50,  "RENT3": 55.80,
     }
+
+    # Generate prices using a fixed seed, then walk forward based on time
     _rng = _rnd.Random(sum(ord(c) for c in asset.upper()))
     _p = _base_prices.get(asset.upper(), 25.00)
-    for _ in range(100):
+    
+    # Base history length + forward steps
+    forward_steps = int(time.time() / 5) % 1000
+    for _ in range(100 + forward_steps):
         _p = _p * (1 + _rng.gauss(0.0003, 0.008))
     current_price = round(max(_p, 0.50), 2)
     
@@ -124,6 +131,7 @@ async def get_chart_data(
     """Retorna dados do gráfico para um ativo (simulado com seed determinística)"""
     import random as _rnd
     from datetime import datetime as _dt
+    import time
 
     # Seed determinística baseada no ativo — o gráfico é sempre o mesmo para o mesmo ativo
     seed = sum(ord(c) for c in asset.upper())
@@ -143,6 +151,15 @@ async def get_chart_data(
 
     candles = []
     closes: list[float] = []
+
+    # Fast forward based on time, so chart moves smoothly over time
+    forward_steps = int(time.time() / 5) % 1000
+    
+    # Process history up to our window without storing
+    for _ in range(forward_steps):
+        drift = rng.gauss(0.0003, 0.008)
+        price = round(price * (1 + drift), 2)
+        price = max(price, 0.50)
 
     for i in range(NUM_CANDLES):
         drift = rng.gauss(0.0003, 0.008)        # leve tendência de alta + volatilidade
