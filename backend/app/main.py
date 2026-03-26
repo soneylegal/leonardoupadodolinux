@@ -17,9 +17,17 @@ async def lifespan(app: FastAPI):
     # Startup
     print("🚀 Iniciando Trading Bot API...")
     
+    from sqlalchemy import text
+    from app.core.database import AsyncSessionLocal
+    
     # Criar tabelas no banco de dados
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        
+    # Inicializar seed de usuário basico para evitar ForeignKey violations no Azure
+    async with AsyncSessionLocal() as session:
+        await session.execute(text("INSERT INTO users (id, email, hashed_password, is_active) VALUES (1, 'admin@tradingbot.com', 'dummy', true) ON CONFLICT DO NOTHING"))
+        await session.commit()
     
     # Inicializar o gerenciador do bot
     app.state.bot_manager = BotManager()
