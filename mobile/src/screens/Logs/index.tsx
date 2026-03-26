@@ -70,7 +70,7 @@ export default function LogsScreen() {
   // Polling a cada 5 segundos
   useEffect(() => {
     loadLogs();
-    intervalRef.current = setInterval(() => loadLogs(true), 5000);
+    intervalRef.current = setInterval(() => loadLogs(true), 15000); // Polling reduced for logs
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, [loadLogs]);
 

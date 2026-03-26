@@ -53,7 +53,8 @@ export default function PaperTradingScreen() {
 
   useEffect(() => {
     loadData();
-    intervalRef.current = setInterval(() => loadData(true), 5000);
+    // Aumentando o intervalo do polling de 5s para 10s para poupar recursos em background
+    intervalRef.current = setInterval(() => loadData(true), 10000);
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, [loadData]);
 
